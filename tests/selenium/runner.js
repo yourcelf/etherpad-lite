@@ -9,13 +9,13 @@ var fs = require("fs");
 var assert = require("assert");
 var optimist = require(srcFolder + "/node_modules/optimist");
 var argv = optimist.argv;
+var log4js = require(srcFolder + "/node_modules/log4js");
+log4js.restoreConsole();
 
 //generate help
 optimist.describe("browser", "a comma seperated list of browsers to test in");
 optimist.describe("spec", "a comma seperated list of specs to test");
 optimist.showHelp();
-
-var log4js = require(srcFolder + "/node_modules/log4js");
 
 var testWorker = async.queue(function (test, callback) {
   //set up browser
@@ -54,12 +54,13 @@ var testWorker = async.queue(function (test, callback) {
     this.setContext('sauce:job-info={"passed": ' + (err === null) + '}', function(){
       browser.testComplete(function(){
         if(err){
-          logger.error("failed", err.stack || err);
+          console.log();
+          logger.error(err.stack || err)
+          logger.error("SEE THE VIDEO --> ", url);
+          console.log();
         } else {
-          logger.info("finished successfully");
+          logger.info("finished successfully", url);
         }
-
-        logger.info("See video ", url);
 
         callback();
       });
@@ -91,7 +92,7 @@ if(argv.browser){
   });
 }
 
-//filter out only allowed browsers
+//filter out only allowed specs
 if(argv.spec){
   var allowedSpecs = argv.spec.split(",");
 
