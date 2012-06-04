@@ -1,0 +1,20 @@
+var config = module.exports;
+
+// how man test should run parrallel
+config.parallel= 10;
+
+//base settings for every test
+config.base = {};
+config.base.url = "http://beta.etherpad.org";
+config.base.username= "YOURUSERNAME";
+config.base["access-key"]="YOURACCESSKEY";
+
+//enviroments
+config.enviroments = []
+
+//Firefox 7
+config.enviroments.push({
+    'os'             : 'Windows 2003'
+  , 'browser'        : 'firefox'
+  , 'browser-version': '7'
+})
