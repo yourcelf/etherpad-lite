@@ -3,6 +3,9 @@ var config = module.exports;
 // How many tests should run parallel?
 config.parallel= 10;
 
+// Loglevels: DEBUG, INFO, ERROR
+config.loglevel = "INFO";
+
 // Base settings for every test
 config.base = {};
 config.base.url = "http://beta.etherpad.org";

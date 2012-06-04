@@ -23,6 +23,7 @@ var testWorker = async.queue(function (test, callback) {
   //build logger for this test
   var name = "'" + test.spec.name + "' on " + test.env.browser + " " + test.env["browser-version"] + ", " + test.env.os;
   var logger = log4js.getLogger(name);
+  logger.setLevel(config.loglevel);
 
   //connect the logger to the browser
   browser.on('command', function(cmd, args){
