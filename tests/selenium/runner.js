@@ -45,6 +45,9 @@ var testWorker = async.queue(function (test, callback) {
   //add end event handler
   browser.end(function(err){
     this.queue = null;
+
+    var url = this.jobUrl;
+
     this.setContext('sauce:job-info={"passed": ' + (err === null) + '}', function(){
       browser.testComplete(function(){
         if(err){
@@ -52,6 +55,8 @@ var testWorker = async.queue(function (test, callback) {
         } else {
           logger.info("finished successfully");
         }
+
+        logger.info("See video ", url);
 
         callback();
       });
