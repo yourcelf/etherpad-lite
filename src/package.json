@@ -35,7 +35,8 @@
   "bin":             { "etherpad-lite": "./node/server.js" },
   "devDependencies": {
                       "jshint"  : "*",
-                      "soda"    : "*"
+                      "soda"    : "*",
+                      "optimist": "*"
                      },
   "engines"        : { "node" : ">=0.6.0",
                        "npm"  : ">=1.0"

@@ -8,12 +8,7 @@ var randomString = require(srcFolder + "/node/utils/randomstring");
 var fs = require("fs");
 var log4js = require(srcFolder + "/node_modules/log4js");
 var assert = require("assert");
-
-//load all tests
-var specNames = fs.readdirSync(specFolder);
-var specFuncs = specNames.map(function(name){
-  return require(specFolder + "/" + name);
-});
+var argv = require(srcFolder + "/node_modules/optimist").argv;
 
 var testWorker = async.queue(function (test, callback) {
   //set up browser
@@ -66,9 +61,39 @@ var testWorker = async.queue(function (test, callback) {
 
 }, config.parallel);
 
-//load all test and enviroment combinations in the worker queue
-specFuncs.forEach(function(spec){
+var tests = [];
+
+//load all tests
+var fileNames = fs.readdirSync(specFolder);
+
+//load all test and enviroment combinations in the tests array
+fileNames.forEach(function(fileName){
+  var spec = require(specFolder + "/" + fileName);
+
   config.enviroments.forEach(function(env){
-    testWorker.push({spec: spec, env: env});
+    tests.push({spec: spec, env: env, fileName: fileName});
   });
+});
+
+//filter out only allowed browsers
+if(argv.browser){
+  var allowedBrowsers = argv.browser.split(",");
+
+  tests = tests.filter(function(test){
+    return allowedBrowsers.indexOf(test.env.browser) !== -1;
+  });
+}
+
+//filter out only allowed browsers
+if(argv.spec){
+  var allowedSpecs = argv.spec.split(",");
+
+  tests = tests.filter(function(test){
+    return allowedSpecs.indexOf(test.fileName) !== -1;
+  });
+}
+
+//add all workers that are still left to the workerQueue
+tests.forEach(function(test){
+  testWorker.push(test);
 })
