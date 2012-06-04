@@ -6,9 +6,16 @@ var soda = require(srcFolder + "/node_modules/soda");
 var _ = require(srcFolder + "/node_modules/underscore");
 var randomString = require(srcFolder + "/node/utils/randomstring");
 var fs = require("fs");
-var log4js = require(srcFolder + "/node_modules/log4js");
 var assert = require("assert");
-var argv = require(srcFolder + "/node_modules/optimist").argv;
+var optimist = require(srcFolder + "/node_modules/optimist");
+var argv = optimist.argv;
+
+//generate help
+optimist.describe("browser", "a comma seperated list of browsers to test in");
+optimist.describe("spec", "a comma seperated list of specs to test");
+optimist.showHelp();
+
+var log4js = require(srcFolder + "/node_modules/log4js");
 
 var testWorker = async.queue(function (test, callback) {
   //set up browser
