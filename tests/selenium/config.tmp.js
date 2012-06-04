@@ -1,62 +1,62 @@
 var config = module.exports;
 
-// how man test should run parrallel
+// How many tests should run parallel?
 config.parallel= 10;
 
-//base settings for every test
+// Base settings for every test
 config.base = {};
 config.base.url = "http://beta.etherpad.org";
 config.base.username= "YOURUSERNAME";
 config.base["access-key"]="YOURACCESSKEY";
 
-//enviroments
+// Enviroments
 config.enviroments = []
 
-//see http://www.w3counter.com/globalstats.php
+// See http://www.w3counter.com/globalstats.php
 
-//Firefox 
+// Firefox 
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'firefox'
   , 'browser-version': ''
 });
 
-//Chrome
+// Chrome
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'googlechrome'
   , 'browser-version': ''
 });
 
-//Safari
+// Safari
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'safari'
   , 'browser-version': ''
 });
 
-//Opera
+// Opera
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'opera'
   , 'browser-version': ''
 });
 
-//IE 7
+// IE 7
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'iexplore'
   , 'browser-version': '7'
 });
 
-//IE 8
+// IE 8
 config.enviroments.push({
     'os'             : 'Windows 2003'
   , 'browser'        : 'iexplore'
   , 'browser-version': '8'
 });
 
-//IE 9
+// IE 9
 config.enviroments.push({
     'os'             : 'Windows 2008'
   , 'browser'        : 'iexplore'
