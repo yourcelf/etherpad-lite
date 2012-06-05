@@ -89,6 +89,10 @@ fileNames.forEach(function(fileName){
 
 //filter out only allowed browsers
 if(argv.browser){
+  
+  //allow common browser shortcuts
+  argv.browser = argv.browser.replace("ie","iexplore").replace("chrome","googlechrome").replace("ff","firefox");
+  
   var allowedBrowsers = argv.browser.split(",");
 
   tests = tests.filter(function(test){
