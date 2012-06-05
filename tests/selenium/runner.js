@@ -15,7 +15,11 @@ log4js.restoreConsole();
 //generate help
 optimist.describe("browser", "a comma seperated list of browsers to test in");
 optimist.describe("spec", "a comma seperated list of specs to test");
-optimist.showHelp();
+
+//show help if requested
+if(argv.help){
+  optimist.showHelp();
+}
 
 var testWorker = async.queue(function (test, callback) {
   //set up browser
