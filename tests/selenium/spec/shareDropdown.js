@@ -7,8 +7,9 @@ exports.func= function(options, callback){
 
   browser.chain
   .session()
+  .setTimeout(20000)
   .open('/p/'+ options.padID)
-  .waitForElementPresent('id=innerdocbody')
+  .waitForNotVisible('id=editorloadingbox')
   .click('id=embedlink')
   .assertVisible('id=embed')
 
@@ -35,14 +36,4 @@ exports.func= function(options, callback){
     assert.equal(iFrameValue.indexOf('iframe') !== -1, true, "Read Only Iframe link does not contain iframe");
     assert.equal(iFrameValue.indexOf('r.') !== -1, true, "Read Only Iframe link does not contain read only style url");
   })
-  
-  
-
-
-
-/*
-  .getLocation(function(location){
-    assert.equal(location.indexOf("/p/") !== -1, true, "Clicking on 'New Pad' doesn't work");
-  })
-*/
 }
