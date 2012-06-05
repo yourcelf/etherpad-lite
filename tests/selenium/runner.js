@@ -37,7 +37,7 @@ var testWorker = async.queue(function (test, callback) {
   });
 
    //create a random padname for this test
-  var padID = randomString(20);
+  var padID = "SELENIUM_" + randomString(20);
 
   logger.info("started");
 
