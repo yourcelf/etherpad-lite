@@ -11,6 +11,13 @@ exports.func= function(options, callback){
   .session()
   .setTimeout(20000)
 
+  // test showing the settings dropdown
+  .open('/p/'+ options.padID)
+  .waitForElementPresent('id=innerdocbody')
+  .verifyNotVisible('id=settings')
+  .click('id=settingslink')
+  .verifyVisible('id=settings')
+
   // test Chat always on screen
   .open('/p/'+ options.padID)
   .waitForElementPresent('id=innerdocbody')
