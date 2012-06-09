@@ -63,12 +63,12 @@ var testWorker = async.queue(function (test, callback) {
 
   var cb = function(){
     //quit the browser
-    browserChain.quit();
-  
-    logger.info("Finished. See the video https://saucelabs.com/jobs/" + browser.sessionID);
+    browserChain.quit(function(){
+      logger.info("Finished. See the video https://saucelabs.com/jobs/" + browser.sessionID);
 
-    //finish this task
-    callback();
+      //finish this task
+      callback();
+    });
   }
 
   logger.info("started");
