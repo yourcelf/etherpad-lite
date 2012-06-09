@@ -41,6 +41,7 @@ var createSafeAssert = function(logger){
 var testWorker = async.queue(function (test, callback) {
   //set up browser
   var browser = wd.remote(config.wd.host, config.wd.port, config.wd.username, config.wd.accessKey);
+  var browserChain = browser.chain();
 
   //build name of the test
   var name = "'" + test.spec.name + "' on " + test.env.browserName + " " + test.env.version;
@@ -56,15 +57,15 @@ var testWorker = async.queue(function (test, callback) {
   //build the test settings
   var testSettings = _.clone(test.env);
   testSettings.name = name;
+  browserChain.init(testSettings);
 
   var assert = createSafeAssert(logger);
 
-  //callback for the test
   var cb = function(){
-    logger.info("Finished. See the video https://saucelabs.com/jobs/" + browser.sessionID);
-
     //quit the browser
-    browser.quit();
+    browserChain.quit();
+  
+    logger.info("Finished. See the video https://saucelabs.com/jobs/" + browser.sessionID);
 
     //finish this task
     callback();
@@ -72,16 +73,15 @@ var testWorker = async.queue(function (test, callback) {
 
   logger.info("started");
 
-  browser.init(testSettings, function(){
-    //run the test
-    test.spec.func({ logger: logger
-                   , browser: browser 
-                   , padID: padID 
-                   , assert: assert
-                   , config: config
-                   , async: async
-                   }, cb); 
-  });
+
+  //run the test
+  test.spec.func({ logger: logger
+                 , browser: browserChain
+                 , padID: padID 
+                 , assert: assert
+                 , config: config
+                 , async: async
+                 }, cb); 
 }, config.parallel);
 
 var tests = [];
