@@ -2,7 +2,7 @@ var specFolder = "./spec";
 var srcFolder = "../../src";
 var config = require("./config");
 var async = require(srcFolder + "/node_modules/async");
-var soda = require(srcFolder + "/node_modules/soda");
+var wd = require(srcFolder + "/node_modules/wd");
 var _ = require(srcFolder + "/node_modules/underscore");
 var randomString = require(srcFolder + "/node/utils/randomstring");
 var fs = require("fs");
@@ -21,56 +21,67 @@ if(argv.help){
   optimist.showHelp();
 }
 
+//wrap all assert functions and catch the ecxeptions
+var createSafeAssert = function(logger){
+  var safeAssert = {};
+
+  for(var key in assert){
+    safeAssert[key] = _.wrap(assert[key], function(func){
+      try{
+        func.apply(null, Array.prototype.slice.apply(arguments, [1]));
+      } catch(e){
+        logger.error(e);
+      }
+    });
+  }
+
+  return safeAssert;
+}
+
 var testWorker = async.queue(function (test, callback) {
   //set up browser
-  var browserSettings = _.extend(config.base, test.env);
-  var browser = soda.createSauceClient(browserSettings);
+  var browser = wd.remote(config.wd.host, config.wd.port, config.wd.username, config.wd.accessKey);
 
-  //build logger for this test
-  var name = "'" + test.spec.name + "' on " + test.env.browser + " " + test.env["browser-version"] + ", " + test.env.os;
+  //build name of the test
+  var name = "'" + test.spec.name + "' on " + test.env.browserName + " " + test.env.version;
+
+  //setup logging
   var logger = log4js.getLogger(name);
   logger.setLevel(config.loglevel);
-
-  //connect the logger to the browser
-  browser.on('command', function(cmd, args){
-    logger.debug(cmd, args.join(', '));
-  });
+  browser.on('command', _.bind(logger.debug,logger));
 
    //create a random padname for this test
   var padID = "SELENIUM_" + randomString(20);
 
+  //build the test settings
+  var testSettings = _.clone(test.env);
+  testSettings.name = name;
+
+  var assert = createSafeAssert(logger);
+
+  //callback for the test
+  var cb = function(){
+    logger.info("Finished. See the video https://saucelabs.com/jobs/" + browser.sessionID);
+
+    //quit the browser
+    browser.quit();
+
+    //finish this task
+    callback();
+  }
+
   logger.info("started");
 
-   //run the test
-  test.spec.func({ logger: logger
-                 , browser: browser 
-                 , padID: padID 
-                 , assert: assert
-                 , browserSettings: browserSettings
-                 }); 
-  
-  //add end event handler
-  browser.end(function(err){
-    this.queue = null;
-
-    var url = this.jobUrl;
-
-    this.setContext('sauce:job-info={"passed": ' + (err === null) + '}', function(){
-      browser.testComplete(function(){
-        if(err){
-          console.log();
-          logger.error(err.stack || err)
-          logger.error("SEE THE VIDEO --> ", url);
-          console.log();
-        } else {
-          logger.info("finished successfully", url);
-        }
-
-        callback();
-      });
-    });
+  browser.init(testSettings, function(){
+    //run the test
+    test.spec.func({ logger: logger
+                   , browser: browser 
+                   , padID: padID 
+                   , assert: assert
+                   , config: config
+                   , async: async
+                   }, cb); 
   });
-
 }, config.parallel);
 
 var tests = [];
@@ -88,15 +99,14 @@ fileNames.forEach(function(fileName){
 });
 
 //filter out only allowed browsers
-if(argv.browser){
-  
+if(argv.browser){  
   //allow common browser shortcuts
   argv.browser = argv.browser.replace("ie","iexplore").replace("chrome","googlechrome").replace("ff","firefox");
   
   var allowedBrowsers = argv.browser.split(",");
 
   tests = tests.filter(function(test){
-    return allowedBrowsers.indexOf(test.env.browser) !== -1;
+    return allowedBrowsers.indexOf(test.env.browserName) !== -1;
   });
 }
 

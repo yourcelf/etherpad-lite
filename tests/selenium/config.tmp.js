@@ -1,16 +1,20 @@
 var config = module.exports;
 
 // How many tests should run parallel?
-config.parallel= 10;
+config.parallel= 1;
 
 // Loglevels: DEBUG, INFO, ERROR
-config.loglevel = "INFO";
+config.loglevel = "DEBUG";
 
-// Base settings for every test
-config.base = {};
-config.base.url = "http://beta.etherpad.org";
-config.base.username= "YOURUSERNAME";
-config.base["access-key"]="YOURACCESSKEY";
+// The url of the Etherpad Lite instance
+config.url = "http://beta.etherpad.org";
+
+// Webdriver settings
+config.wd = {};
+config.wd.host = "ondemand.saucelabs.com";
+config.wd.port = 80;
+config.wd.username= "YOURUSERNAME";
+config.wd.accessKey ="YOURACCESSKEY";
 
 // Enviroments
 config.enviroments = []
@@ -19,49 +23,42 @@ config.enviroments = []
 
 // Firefox 
 config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'firefox'
-  , 'browser-version': ''
+    'platform'       : 'Windows 2003'
+  , 'browserName'    : 'firefox'
+  , 'version'        : ''
 });
 
 // Chrome
 config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'googlechrome'
-  , 'browser-version': ''
-});
-
-// Safari
-config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'safari'
-  , 'browser-version': ''
+    'platform'       : 'Windows 2003'
+  , 'browserName'    : 'googlechrome'
+  , 'version'        : ''
 });
 
 // Opera
 config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'opera'
-  , 'browser-version': ''
+    'platform'       : 'Linux'
+  , 'browserName'    : 'opera'
+  , 'version'        : ''
 });
 
 // IE 7
 config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'iexplore'
-  , 'browser-version': '7'
+    'platform'       : 'Windows 2003'
+  , 'browserName'    : 'iexplore'
+  , 'version'        : '7'
 });
 
 // IE 8
 config.enviroments.push({
-    'os'             : 'Windows 2003'
-  , 'browser'        : 'iexplore'
-  , 'browser-version': '8'
+    'platform'       : 'Windows 2003'
+  , 'browserName'    : 'iexplore'
+  , 'version'        : '8'
 });
 
 // IE 9
 config.enviroments.push({
-    'os'             : 'Windows 2008'
-  , 'browser'        : 'iexplore'
-  , 'browser-version': '9'
+    'platform'       : 'Windows 2008'
+  , 'browserName'    : 'iexplore'
+  , 'version'        : '9'
 });
