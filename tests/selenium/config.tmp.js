@@ -23,14 +23,14 @@ config.enviroments = []
 
 // Firefox 
 config.enviroments.push({
-    'platform'       : 'Windows 2003'
+    'platform'       : 'Linux'
   , 'browserName'    : 'firefox'
   , 'version'        : ''
 });
 
 // Chrome
 config.enviroments.push({
-    'platform'       : 'Windows 2003'
+    'platform'       : 'Linux'
   , 'browserName'    : 'googlechrome'
   , 'version'        : ''
 });
